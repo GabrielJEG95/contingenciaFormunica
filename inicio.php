@@ -123,11 +123,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script src="Views/plugins/moment/moment.min.js"></script>
 <script src="Views/plugins/select2/js/select2.full.min.js"></script>
 <script>
-  $('#btnInfo').click(function(){
-    alertify.alert("Gerencia de IT","Formunica <br>Soporte a Gerencia de IT"
-          
-        );
-    });
+
     $(document).ready(function(){
   navigator.geolocation.getCurrentPosition(position => {
       var lati= position.coords.latitude;
