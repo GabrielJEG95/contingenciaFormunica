@@ -284,3 +284,57 @@
         </div>
     </div>
 </div> 
+
+<div class="modal fade" id="modalCRUD3" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                 <div class="row">
+        <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Actualizar Solicitud</h3> -
+              <label id="lblSolicitud" for="">Solicitud</label>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body" style=" overflow-x: scroll; height: 150px;">
+            <form id="frmReintegroUpt" name="frmReintegroUpt" method="post"></form>
+            <div class="row">
+                    <div class="col-lg-2">
+                        <div class="form-group">
+                            <label for="" class="col-form-label">Centro de Costo</label>
+                            <input type="text" class="form-control" id="centroCostoUpt" name="centroCostoUpt" data-inputmask='"mask": "99-99-99"' data-mask>
+                        </div>
+                    </div>
+                    <div class="col-lg-2">
+                        <div class="form-group">
+                            <label for="" class="col-form-label">Monto</label>
+                            <input type="text" class="form-control" id="montoUpt" name="montoUpt">
+                            <input type="hidden" name="idUpt" id="idUpt">
+                        </div> 
+                    </div>
+            </div> 
+                    
+                </div>
+                
+            </div>
+          </div>
+        </div>
+               
+                             
+            </div>
+            <div id="progresSave"></div>
+            <div class="modal-footer">
+            <button type="button" id="btnActualizarRei" class="btn btn-success">Actualizar</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+
+        </div>
+    </div>
+</div> 

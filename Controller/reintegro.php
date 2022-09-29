@@ -3,20 +3,32 @@ date_default_timezone_set('America/Managua');
 session_start();
 ob_start();
 require_once 'conexion.php';
+include 'log.php';
 
 $opcion=$_GET['opcion'];
 $IdSolicitud = $_GET['IDSol'];
+$usuario = $_SESSION['Usuario'];
+$table = 'reiSolicitudReintegroDePago';
+$action = '';
+$initialVal='';
+$finalVal='';
+$ip = $_SESSION['IP'];
+$contingencia = new contingencia();
 
 switch($opcion) {
     case "get":
             if($IdSolicitud != null || $IdSolicitud != 0) {
                 $sql="SELECT * FROM fnica.reiSolicitudReintegroDePago where IdSolicitud='$IdSolicitud'";
+                $action = "consultar ".$IdSolicitud;
             } else {
                 $sql="SELECT top 50 * FROM fnica.reiSolicitudReintegroDePago order by FechaSolicitud desc";
+                $action = "consultar";
             }
             
 
             $result=sqlsrv_query($conexion,$sql);
+            
+            $contingencia->logContig($table,$usuario,$action,$initialVal,$finalVal,$ip,$conexion);
             
             $tabla= array();
             
@@ -44,8 +56,8 @@ switch($opcion) {
             $concepto= $_POST['txtConcepto'];
             $esDolar=$_POST['rdbEsDol'];
             $estadoSol=$_POST['cmbEstadoSol'];
-            $usuario = $_SESSION['Usuario'];
-            $consulta="SELECT max(IdSolicitud) as IdSolicitud FROM fnica.reiSolicitudReintegroDePago";
+            $action="Registrar";
+            
             $fechaReg=date('Y-m-d H:m:s');
             $fechaAsientoContable=null;
             $NumCheque=null;
@@ -56,6 +68,8 @@ switch($opcion) {
             $anulado=0;
             $flgAsientoGenerado=0;
 
+            $consulta="SELECT max(IdSolicitud) as IdSolicitud FROM fnica.reiSolicitudReintegroDePago";
+            
             $result=sqlsrv_query($conexion,$consulta);
             while($item = sqlsrv_fetch_array($result)){
                 $IdSolicitud = $item['IdSolicitud'];
@@ -66,11 +80,36 @@ switch($opcion) {
                     values('$IdSolicitud','$centroCosto','$FechaFactura','$monto','$tipoSol','$beneficiario','$concepto','$esDolar','$estadoSol','$usuario','$fechaReg','$asiento','','$NumCheque','$anulado','$flgAsientoGenerado','$fechaAsientoContable','$usuario1','$fechaUpt')";
             if(sqlsrv_query($conexion,$sql)){
                 echo $IdSolicitud;
+                $contingencia->logContig($table,$usuario,$action." ".$IdSolicitud,$initialVal,$finalVal,$ip,$conexion);
             }else {
                 echo "2";
             }
         break;
     case "put":
+            $CentroCosto = $_POST['CentroCosto'];
+            $Monto = $_POST['Monto'];
+            $action="Actualizar";
+            
+            $consultarSol="SELECT CENTRO_COSTO,Monto FROM fnica.reiSolicitudReintegroDePago where IdSolicitud='$IdSolicitud'";
+            $result=sqlsrv_query($conexion,$consultarSol);
+            while($item = sqlsrv_fetch_array($result)){
+                $CentroCostoSolicitud = $item['CENTRO_COSTO'];
+                $MontoSolicitud = $item['Monto'];
+            }
+
+            $sql = "UPDATE fnica.reiSolicitudReintegroDePago 
+                set CENTRO_COSTO = '$CentroCosto',Monto='$Monto' 
+                where IdSolicitud = '$IdSolicitud'";
+
+            $initialVal="Centro de Costo: ".$CentroCostoSolicitud." Monto: ".$MontoSolicitud;
+            $finalVal="Centro de Costo: ".$CentroCosto." Monto: ".$Monto;
+            
+            if(sqlsrv_query($conexion,$sql)) {
+                echo 1;
+                $contingencia->logContig($table,$usuario,$action." ".$IdSolicitud,$initialVal,$finalVal,$ip,$conexion);
+            } else {
+                echo 2;
+            }
         break;
     case "delete":
         break;

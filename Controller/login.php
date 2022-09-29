@@ -14,6 +14,8 @@ if ($IpCliente=='') {
     $ip=$IpCliente." Local";
 }
 
+$_SESSION['IP'] = $ip;
+
 $sql ="SELECT *
 from fnica.globalUSUARIO where USUARIO='$user' and PASSWORD='$pass'";
 

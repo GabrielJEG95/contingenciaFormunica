@@ -31,7 +31,7 @@ $(document).on("click",".btnMostrar",function(){
     IDSol= parseInt(fila.find('td:eq(0)').text());
     $('#exampleModalLabel').text('Solicitud # '+IDSol)
     $('#txtIdSolic').val(IDSol)
-
+    limpiarCampos()
     listarDetalleReintegro(IDSol)
    
 });
@@ -51,9 +51,7 @@ $('#btnGuardarRei').click(()=>{
           $('#btnGuardarRei').text('Guardando...');
         },
         success: function (data) {
-          console.log(data)
           if (data != "2") {
-            let IdSolicitudRei=''
             Swal.fire(
                 'Solicitud #'+data,
                 'Registro Creado con Exito!',
@@ -61,7 +59,8 @@ $('#btnGuardarRei').click(()=>{
               )
             $('#cargando').hide();
             $('#btnGuardarRei').text('Guardar');
-            listarReintegro(IdSolicitudRei);
+            listarReintegro(data);
+            limpiarCampos
             return false;
     
           } else {
@@ -73,6 +72,41 @@ $('#btnGuardarRei').click(()=>{
         }
       });
 })
+
+$(document).on("click",".btnDelete",function(){
+  console.log('click delete')
+  fila=$(this).closest("tr");
+  let IDSol= parseInt(fila.find('td:eq(0)').text());
+  let CentroCosto = fila.find('td:eq(1)').text();
+  let Linea = parseInt(fila.find('td:eq(3)').text());
+  let Monto= fila.find('td:eq(6)').text();
+
+  alertify.confirm('Alerta','¿Seguro que desea eliminar la linea '+Linea+' de la solicitud '+IDSol, function(){ 
+    $.ajax({
+      url: `Controller/reintegroDetalle.php?opcion=delete&IDSol=${IDSol}&Linea=${Linea}&CentroCosto=${CentroCosto}&Monto=${Monto}`,
+      type: 'GET',
+      contentType: false,
+      dataType: 'json',
+      //data: data,
+      processData: false,
+      success: function (data) {
+        if (data == "1") {
+          alertify.success('Ok') 
+          listarDetalleReintegro(IDSol);
+          return false;
+  
+        } else {
+          alertify.error("Error al eliminar la linea "+Linea);
+          return false;
+        }
+      }
+    })
+    
+  }, function(){ 
+    alertify.error('Se cancelo la operación')
+  })
+})
+  
 
 $('#btnAddDetalle').click(()=>{
     var data = new FormData();
@@ -105,15 +139,73 @@ $('#btnAddDetalle').click(()=>{
               )
             $('#btnAddDetalle').text('Guardar');
             listarDetalleReintegro(IdSolicitud);
+            limpiarCampos
             return false;
     
-          } else {
+          } else if(data == "2") {
             alertify.error("Error al registrar");
+            $('#btnAddDetalle').text('Guardar');
+            return false;
+          } else {
+            alertify.error("La suma de todos los items supera al monto ingresado en la solicitud por "+data);
             $('#btnAddDetalle').text('Guardar');
             return false;
           }
         }
     })
+})
+
+$(document).on("click",".btnEditarSol",function(){
+  $(".modal-header").css("background-color", "#4c8c4a");
+  $(".modal-header").css("color", "white" );
+  $('#modalCRUD3').modal('show');
+  fila=$(this).closest("tr");
+  let IDSol= parseInt(fila.find('td:eq(0)').text());
+  let CeCo = fila.find('td:eq(1)').text();
+  let Monto = fila.find('td:eq(4)').text();
+
+  
+
+  $('#lblSolicitud').text(IDSol);
+  $('#centroCostoUpt').val(CeCo)
+  $('#montoUpt').val(Monto);
+  $('#idUpt').val(IDSol)
+})
+
+$('#btnActualizarRei').click(()=>{
+  let IdSol=$('#idUpt').val()
+  let Ceco=$('#centroCostoUpt').val()
+  let Monto=$('#montoUpt').val();
+
+  let data = new FormData();
+  data.append('CentroCosto',Ceco)
+  data.append('Monto',Monto)
+
+  $.ajax({
+        url: `Controller/reintegro.php?opcion=put&IDSol=${IdSol}`,
+        type: 'POST',
+        contentType: false,
+        dataType: 'json',
+        data: data,
+        processData: false,
+        success: function (data) {
+          console.log(data)
+          if (data == "1") {
+            Swal.fire(
+                'Enhonabuena',
+                'Registro Actualizado con Exito!',
+                'success'
+              )
+            listarReintegro(IdSol);
+            
+            return false;
+    
+          } else {
+            alertify.error("Error al actualizar la solicitud");
+            return false;
+          }
+        }
+  })
 })
 
 function listarReintegro(IDSol) {
@@ -133,7 +225,7 @@ function listarReintegro(IDSol) {
             {"data": "Concepto"},
             {"data": "FechaSolicitud"},
             {"data": "Monto"},
-            {"defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-success btn-sm btnMostrar'><i class='material-icons'>Detalles</i></button></div></div>"}
+            {"defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-success btn-sm btnEditarSol'><i class='material-icons'>Editar</i></button><button class='btn btn-success btn-sm btnMostrar'><i class='material-icons'>Detalles</i></button> </div></div>"}
        ],
         "paging": true,
         "lengthChange": true,
@@ -177,7 +269,7 @@ function listarDetalleReintegro(IDSol) {
             {"data": "Concepto"},
             {"data": "FechaFactura"},
             {"data": "Monto"},
-            {"defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-danger btn-sm btnDelete'><i class='material-icons'>Anular</i></button></div></div>"}
+            {"defaultContent": "<div class='text-center'><div class='btn-group'><button id='btnDelete' class='btn btn-danger btn-sm btnDelete'><i class='material-icons'>Anular</i></button></div></div>"}
        ],
         "paging": true,
         "lengthChange": true,
@@ -200,4 +292,16 @@ function listarDetalleReintegro(IDSol) {
             }
         }
     });
+}
+
+function limpiarCampos() {
+  $('#centroCosto').val('')
+  $('#cuentaContable').val('')
+  $('#txtNumFact').val('')
+  $('#txtNombreEst').val('')
+  $('#txtMonto').val('')
+  $('#txtConcepto').val('')
+  $('#nombreBeneficiario').val('')
+  $('#monto').val('')
+  $('#cmbEstadoSol').val('')
 }
