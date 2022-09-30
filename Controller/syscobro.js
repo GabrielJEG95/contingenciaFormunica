@@ -20,8 +20,27 @@ $('#btnBuscar').click(()=>{
     buscarDocumento(opcion,documento,sucursal,cliente)
 })
 
+$(document).on("click",".btnMostrar",function(){
+    $(".modal-header").css("background-color", "#4c8c4a");
+    $(".modal-header").css("color", "white" );
+    $('#modalCRUD').modal('show');
+    fila=$(this).closest("tr");
+    let PlazoActual = fila.find('td:eq(7)').text()
+    let vencimientoActual = fila.find('td:eq(9)').text()
+    let Cliente = fila.find('td:eq(2)').text()
+
+    $('#lblPlazo').text(PlazoActual)
+    $('#lblFechaVencimiento').text(vencimientoActual)
+    $('#lblCliente').text(Cliente)
+})
+
+$('#btnUptPlazo').click(()=>{
+    
+})
+
 function buscarDocumento(opcion,documento,codSucursal,CodCliente) {
-    $('#tblDocumenetoCC').DataTable({
+    console.log(opcion, codSucursal, documento, CodCliente)
+    $('#tblDocumeneto').DataTable({
         "bDeferRender":true,
         "sPaginationType": "full_numbers",
         "ajax":{
@@ -33,10 +52,13 @@ function buscarDocumento(opcion,documento,codSucursal,CodCliente) {
         "columns":[
             {"data": "IDDocumentoCC"},
             {"data": "CodCliente"},
+            {"data": "Cliente"},
             {"data": "CodSucursal"},
             {"data": "Documento"},
-            {"data": "MontoDocument"},
+            {"data": "MontoOriginal"},
+            {"data": "SaldoActual"},
             {"data": "Plazo"},
+            {"data": "Fecha"},
             {"data": "Vencimiento"},
             {"data": "VencimientoVar"},
             {"defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-success btn-sm btnMostrar'><i class='material-icons'>Detalles</i></button> </div></div>"}
