@@ -2,6 +2,9 @@
 date_default_timezone_set('America/Managua');
 header("Cache-Control: no-cache, must-revalidate");
 require_once 'Controller/validacion.php';
+require_once 'Controller/conexion.php';
+include('Controller/funciones.php');
+$permisos = new permisos();
 ?>
 
 <!DOCTYPE html>

@@ -63,11 +63,31 @@ class sysCobro {
 
 
 class permisos {
-    public function obtenerPermisos($usuario,$role,$conexion) {
+    public function tienePermiso($usuario,$role,$conexion) {
         $sql = "SELECT *
         from fnica.secUSUARIOROLE
         where USUARIO='$usuario' and IDROLE=$role";
 
         $result = sqlsrv_query($conexion,$sql);
+
+        $data = array();
+        $IdRole = '';
+
+        while($item = sqlsrv_fetch_array($result)) {
+            $data[] = array (
+                'IDRole' => $item['IDROLE'],
+                'USUARIO' => $item['USUARIO'],
+                'IdModulo' => $item['IDMODULO']
+            );
+            $IdRole = $item['IDROLE'];
+            
+        }
+        
+        if($IdRole != 0) {
+            return true;
+        } else {
+            return false;
+        }
+
     }
 }
