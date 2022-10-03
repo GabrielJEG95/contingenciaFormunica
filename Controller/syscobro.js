@@ -35,7 +35,41 @@ $(document).on("click",".btnMostrar",function(){
 })
 
 $('#btnUptPlazo').click(()=>{
-    
+    console.log("click update")
+    let data = new FormData()
+    let plazoOriginal = $('#txtPlazoOriginal').val()
+    let Plazo = $('#txtNuevoPlazo').val()
+    let documento = $('#txtDocumento').val()
+    let sucursal = $('#cmbSucursal').val()
+    let cliente = $('#cmbCliente').val()
+
+    data.append('plazoOriginal',plazoOriginal)
+    data.append('Plazo',Plazo)
+
+    $.ajax({
+        url: `Controller/syscobro.php?opcion=put&documento=${documento}&codSucursal=${sucursal}&CodCliente=${cliente}`,
+        type: 'POST',
+        contentType: false,
+        dataType: 'json',
+        data: data,
+        processData: false,
+        success: function (data) {
+            if (data != "2") {
+              Swal.fire(
+                  'Documento #'+documento,
+                  'Se actualizo el plazo con exito!',
+                  'success'
+                )
+                buscarDocumento("get",documento,sucursal,cliente)
+                $('#modalCRUD').modal('hide');
+              return false;
+      
+            } else {
+              alertify.error("Error al actualizar el plazo");
+              return false;
+            }
+          }
+    })
 })
 
 function buscarDocumento(opcion,documento,codSucursal,CodCliente) {

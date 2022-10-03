@@ -117,6 +117,7 @@
                     <div class="col-lg-1">
                         <div class="form-group">
                             <label for="" class="col-form-label">Plazo:</label>
+                            <input type="hidden" name="txtPlazoOriginal" id="txtPlazoOriginal">
                         </div>
                     </div>
                     <div class="col-lg-2">
@@ -157,7 +158,7 @@
             </div>
             <div id="progresSave"></div>
             <div class="modal-footer">
-            <button id="btnUptPlazo" type="button" class="btn btn-success">Actualizar</button>
+                <button id="btnUptPlazo" type="button" class="btn btn-success">Actualizar</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
             </div>
 
