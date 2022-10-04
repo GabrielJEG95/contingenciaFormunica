@@ -254,9 +254,10 @@ class diario {
 
     }
 
-    public function registrarDiarioDetalle($consecutivo,$sucursal,$monto,$moneda,$cliente,$bancoEmisor,$bancoReceptor,$fechaCierre) {
+    public function registrarDiarioDetalle($consecutivo,$sucursal,$monto,$moneda,$cliente,$bancoEmisor,$bancoReceptor,$fechaCierre,$diario,$conexion,$tipoPago,$documento,$deposito) {
         $montoCordoba = 0;
         $montoDolar = 0;
+        $Linea = obtenerUltimaLinea($diario,$sucursal,$conexion);
 
         switch($moneda)
         {
@@ -268,6 +269,108 @@ class diario {
                 break;
         }
 
+        $sql = "INSERT INTO fnica.fafDIARIODETALLE 
+        (LINEA,CODSUCURSAL,FECHACIERRE,NUMEROCONSECUTIVO,TIPOPAGO,BANCOEMISOR,NUMERODOCUMENTO,NOMBRECLIENTE,BANCORECEPTOR,NUMERODEPOSITO,MONTOCORDOBA,MONTODOLAR,AsientoContabla)
+        values('$Linea','$sucursal','$fechaCierre','$consecutivo','$tipoPago','$bancoEmisor','$documento','$cliente','$bancoReceptor','$deposito','$montoCordoba','$montoDolar',null)";
 
+        if(sqlsrv_query($sql)) {
+            return 1;
+        } else {
+            return 2;
+        }
+
+
+    }
+
+    private function actualizarMontosDiario($consecutivo,$sucursal,$moneda,$monto,$tipoPago,$conexion) {
+
+        /* declaracion de variables para los nuevos montos */
+        $efectivoCordoba = 0;
+        $efectivoDolar = 0;
+        $chequeCordoba = 0;
+        $chequeDolar = 0;
+        $otros = 0;
+        $otrosDolar = 0;
+
+        /* variables para recuperar datos del fafdiario  */
+        $cordobaEF = 0;
+        $dolarEF = 0;
+        $cordobaCHK = 0;
+        $dolarCHK = 0;
+        $otrosMontos = 0;
+        $otrosMontosDol = 0;
+
+        /*consultar a la base de datos los montos actuales del diario */ 
+        $consultaMontos = "SELECT * FROM fnica.fafDIARIO where NUMEROCONSECUTIVO = $consecutivo and CODSUCURSAL = $sucursal";
+        $resultMontos = sqlsrv_query($conexion,$consultaMontos);
+
+        while($item = sqlsrv_fetch_array($resultMontos)) {
+            $cordobaEF = $item['EFECTIVOCORDOBA'];
+            $dolarEF = $item['EFECTIVODOLAR'];
+            $cordobaCHK = $item['CHEQUECORDOBA'];
+            $dolarCHK = $item['CHEQUEDOLAR'];
+            $otrosMontos = $item['OTROS'];
+            $otrosMontosDol = $item['OTROSDOLAR'];            
+        }
+
+        switch($tipoPago)
+        {
+            case 'AN':
+                break;
+            case 'CK':
+                    if($moneda=='dol')
+                    {
+                        $chequeDolar =  $monto;
+                    } else {
+                        $chequeCordoba = $monto;
+                    }
+                break;
+            case 'EF':
+                    if($moneda=='dol') {
+                        $efectivoDolar = $monto;
+                    } else {
+                        $efectivoCordoba = $monto;
+                    }
+                break;
+            case 'GB':
+                break;
+            case 'NC':
+                break;
+            case 'OT':
+                break;
+            case 'RT':
+                break;
+            case 'TB':
+                    if($moneda=='dol') {
+                        $otrosDolar = $monto;
+                    } else {
+                        $otros = $monto;
+                    }
+                break;
+            case 'TC':
+                    if($moneda=='dol') {
+                        $otrosDolar = $monto;
+                    } else {
+                        $otros = $monto;
+                    }
+                break;
+        }
+
+        $cordobaEF = $cordobaEF + $efectivoCordoba;
+        $dolarEF = $dolarEF + $efectivoDolar;
+        $cordobaCHK = $cordobaCHK + $chequeCordoba;
+        $dolarCHK = $dolarCHK + $chequeDolar;
+        $otrosMontos = $otrosMontos + $otros; 
+        $otrosMontosDol = $otrosMontosDol + $otrosDolar;
+
+        $sqlUpdate = "UPDATE fnica.fafDIARIO
+        set EFECTIVOCORDOBA = $cordobaEF,EFECTIVODOLAR=$dolarEF,CHEQUECORDOBA=$cordobaCHK,CHEQUEDOLAR=$dolarCHK,OTROS=$otrosMontos,OTROSDOLAR=$otrosMontosDol
+        where NUMEROCONSECUTIVO=$consecutivo and CODSUCURSAL=$sucursal";
+
+        if(sqlsrv_query($conexion,$sqlUpdate)) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 }
