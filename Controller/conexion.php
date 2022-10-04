@@ -8,7 +8,7 @@ $username_localhost="gespinoza";
 $password_localhost="Genet1995!";*/
 
 $serverName = "10.10.0.10"; //serverName\instanceName
-$connectionInfo = array( "Database"=>"prueba", "UID"=>"gespinoza", "PWD"=>"Genet1995!","CharacterSet" => "UTF-8");
+$connectionInfo = array( "Database"=>"prueba", "UID"=>"gespinoza", "PWD"=>"Gdjeg1995","CharacterSet" => "UTF-8");
 
 $conexion=sqlsrv_connect($serverName, $connectionInfo);
 /*

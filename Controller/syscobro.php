@@ -39,7 +39,7 @@ switch($opcion)
             $plazoOriginal = $_POST['plazoOriginal'];
 
             $sysCobro->actualizarPlazoCCF($documento,$plazo,$codSucursal,$conexion);
-            echo $sysCobro->actualizarPlazoFact($plazo,$documento,$codSucursal),$conexion;
+            echo $sysCobro->actualizarPlazoFact($plazo,$documento,$codSucursal,$conexion);
 
             $action='actualizar documento '.$documento." de sucursal ".$codSucursal;
             $initialVal="Plazo: ".$plazoOriginal;
