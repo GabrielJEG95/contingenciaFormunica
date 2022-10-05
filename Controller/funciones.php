@@ -190,7 +190,8 @@ class diario {
                 'CHEQUEDOLAR' => $item['CHEQUEDOLAR'],
                 'OTROS' => $item['OTROS'],
                 'TIPOCAMBIO' => $item['TIPOCAMBIO'],
-                'RETENCION' => $item['RETENCION']
+                'RETENCION' => $item['RETENCION'],
+                'OTROSDOLAR' => $item['OTROSDOLAR']
             );
             
         }
@@ -236,7 +237,38 @@ class diario {
         return $jsonString;
     }
 
-    public function obtenerUltimaLinea($diario,$sucursal,$conexion) {
+    
+
+    public function registrarDiarioDetalle($consecutivo,$sucursal,$monto,$moneda,$cliente,$bancoEmisor,$bancoReceptor,$fechaCierre,$diario,$conexion,$tipoPago,$documento,$deposito) {
+        $montoCordoba = 0;
+        $montoDolar = 0;
+        $Linea = $this->obtenerUltimaLinea($diario,$sucursal,$conexion);
+
+        switch($moneda)
+        {
+            case 'dol':
+                    $montoDolar = $monto;
+                break;
+            case 'cor':
+                    $montoCordoba = $monto;
+                break;
+        }
+
+        $sql = "INSERT INTO fnica.fafDIARIODETALLE 
+        (LINEA,CODSUCURSAL,FECHACIERRE,NUMEROCONSECUTIVO,TIPOPAGO,BANCOEMISOR,NUMERODOCUMENTO,NOMBRECLIENTE,BANCORECEPTOR,NUMERODEPOSITO,MONTOCORDOBA,MONTODOLAR)
+        values('$Linea','$sucursal','$fechaCierre',$consecutivo,'$tipoPago','$bancoEmisor','$documento','$cliente','$bancoReceptor','$deposito','$montoCordoba','$montoDolar')";
+
+        if(sqlsrv_query($conexion,$sql)) {
+            return $this->actualizarMontosDiario($consecutivo,$sucursal,$moneda,$monto,$tipoPago,$conexion);
+            
+        } else {
+            return 2;
+        }
+
+
+    }
+
+    private function obtenerUltimaLinea($diario,$sucursal,$conexion) {
         $sql = "SELECT LINEA 
         FROM fnica.fafDIARIODETALLE
         where NUMEROCONSECUTIVO='$diario' and CODSUCURSAL='$sucursal';";
@@ -251,34 +283,6 @@ class diario {
         $Linea=$Linea+1;
 
         return $Linea;
-
-    }
-
-    public function registrarDiarioDetalle($consecutivo,$sucursal,$monto,$moneda,$cliente,$bancoEmisor,$bancoReceptor,$fechaCierre,$diario,$conexion,$tipoPago,$documento,$deposito) {
-        $montoCordoba = 0;
-        $montoDolar = 0;
-        $Linea = obtenerUltimaLinea($diario,$sucursal,$conexion);
-
-        switch($moneda)
-        {
-            case 'dol':
-                    $montoDolar = $monto;
-                break;
-            case 'cor':
-                    $montoCordoba = $monto;
-                break;
-        }
-
-        $sql = "INSERT INTO fnica.fafDIARIODETALLE 
-        (LINEA,CODSUCURSAL,FECHACIERRE,NUMEROCONSECUTIVO,TIPOPAGO,BANCOEMISOR,NUMERODOCUMENTO,NOMBRECLIENTE,BANCORECEPTOR,NUMERODEPOSITO,MONTOCORDOBA,MONTODOLAR,AsientoContabla)
-        values('$Linea','$sucursal','$fechaCierre','$consecutivo','$tipoPago','$bancoEmisor','$documento','$cliente','$bancoReceptor','$deposito','$montoCordoba','$montoDolar',null)";
-
-        if(sqlsrv_query($sql)) {
-            return 1;
-        } else {
-            return 2;
-        }
-
 
     }
 
@@ -301,7 +305,10 @@ class diario {
         $otrosMontosDol = 0;
 
         /*consultar a la base de datos los montos actuales del diario */ 
-        $consultaMontos = "SELECT * FROM fnica.fafDIARIO where NUMEROCONSECUTIVO = $consecutivo and CODSUCURSAL = $sucursal";
+        $consultaMontos = "SELECT * 
+        FROM fnica.fafDIARIO 
+        where NUMEROCONSECUTIVO = '$consecutivo' and CODSUCURSAL = '$sucursal'";
+
         $resultMontos = sqlsrv_query($conexion,$consultaMontos);
 
         while($item = sqlsrv_fetch_array($resultMontos)) {
@@ -337,6 +344,11 @@ class diario {
             case 'NC':
                 break;
             case 'OT':
+                    if($moneda=='dol') {
+                        $otrosDolar = $monto;
+                    } else {
+                        $otros = $monto;
+                    }
                 break;
             case 'RT':
                 break;
@@ -365,12 +377,30 @@ class diario {
 
         $sqlUpdate = "UPDATE fnica.fafDIARIO
         set EFECTIVOCORDOBA = $cordobaEF,EFECTIVODOLAR=$dolarEF,CHEQUECORDOBA=$cordobaCHK,CHEQUEDOLAR=$dolarCHK,OTROS=$otrosMontos,OTROSDOLAR=$otrosMontosDol
-        where NUMEROCONSECUTIVO=$consecutivo and CODSUCURSAL=$sucursal";
+        where NUMEROCONSECUTIVO='$consecutivo' and CODSUCURSAL='$sucursal'";
 
         if(sqlsrv_query($conexion,$sqlUpdate)) {
             return 1;
         } else {
             return 0;
         }
+    }
+
+    public function eliminarLineaDiario($linea,$sucursal,$consecutivo,$deposito,$conexion) {
+        $sql = "DELETE FROM fnica.fafDIARIODETALLE 
+        where LINEA=$linea and CODSUCURSAL = '$sucursal' and NUMEROCONSECUTIVO='$consecutivo' and NUMERODEPOSITO = $deposito";
+
+        if(sqlsrv_query($conexion,$sql)) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+    private function recalcularDiarioAnulado($consecutivo,$sucursal,$conexion) {
+        $consultaDetalle  = "SELECT LINEA,CODSUCURSAL,NUMEROCONSECUTIVO,TIPOPAGO,MONTOCORDOBA,MONTODOLAR 
+        FROM fnica.fafDIARIODETALLE where NUMEROCONSECUTIVO='$consecutivo' and CODSUCURSAL='$sucursal'";
+
+        
     }
 }
