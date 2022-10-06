@@ -6,48 +6,56 @@ require_once 'conexion.php';
 include('log.php');
 include('funciones.php');
 
-$opcion=$_GET['opcion'];
-$documento=$_GET['documento'];
-$codSucursal=$_GET['codSucursal'];
-$CodCliente =$_GET['CodCliente'];
+include ('validaAutorizacion.php');
+$validate = new autorize();
 
-$usuario = $_SESSION['Usuario'];
-$table = 'ccfDocumentoCC';
-$action = '';
-$initialVal='';
-$finalVal='';
-$ip = $_SESSION['IP'];
-$contingencia = new contingencia();
-$sysCobro= new sysCobro();
+if(!$validate->validate()) {
+    echo '[{error:"No Autorizado",statusCode:"401"}]';
+} else {
+    $opcion=$_GET['opcion'];
+    $documento=$_GET['documento'];
+    $codSucursal=$_GET['codSucursal'];
+    $CodCliente =$_GET['CodCliente'];
 
-switch($opcion) 
-{
-    case 'get':
+    $usuario = $_SESSION['Usuario'];
+    $table = 'ccfDocumentoCC';
+    $action = '';
+    $initialVal='';
+    $finalVal='';
+    $ip = $_SESSION['IP'];
+    $contingencia = new contingencia();
+    $sysCobro= new sysCobro();
 
-        echo $sysCobro->mostrarFactura($documento,$CodCliente,$codSucursal,$conexion);
-        
-        $action='consultar documento '.$documento." de sucursal ".$codSucursal;
-        $contingencia->logContig($table,$usuario,$action,$initialVal,$finalVal,$ip,$conexion);
+    switch($opcion) 
+    {
+        case 'get':
 
-        break;
-    case 'post':
+            echo $sysCobro->mostrarFactura($documento,$CodCliente,$codSucursal,$conexion);
             
-        break;
-    case 'put':
-
-            $plazo=$_POST['Plazo'];
-            $plazoOriginal = $_POST['plazoOriginal'];
-
-            $sysCobro->actualizarPlazoCCF($documento,$plazo,$codSucursal,$conexion);
-            echo $sysCobro->actualizarPlazoFact($plazo,$documento,$codSucursal,$conexion);
-
-            $action='actualizar documento '.$documento." de sucursal ".$codSucursal;
-            $initialVal="Plazo: ".$plazoOriginal;
-            $finalVal="Plazo: ".$plazo;
+            $action='consultar documento '.$documento." de sucursal ".$codSucursal;
             $contingencia->logContig($table,$usuario,$action,$initialVal,$finalVal,$ip,$conexion);
-        
-        
-        break;
-    case 'delete':
-        break;
+
+            break;
+        case 'post':
+                
+            break;
+        case 'put':
+
+                $plazo=$_POST['Plazo'];
+                $plazoOriginal = $_POST['plazoOriginal'];
+
+                $sysCobro->actualizarPlazoCCF($documento,$plazo,$codSucursal,$conexion);
+                echo $sysCobro->actualizarPlazoFact($plazo,$documento,$codSucursal,$conexion);
+
+                $action='actualizar documento '.$documento." de sucursal ".$codSucursal;
+                $initialVal="Plazo: ".$plazoOriginal;
+                $finalVal="Plazo: ".$plazo;
+                $contingencia->logContig($table,$usuario,$action,$initialVal,$finalVal,$ip,$conexion);
+            
+            
+            break;
+        case 'delete':
+            break;
+    }
 }
+

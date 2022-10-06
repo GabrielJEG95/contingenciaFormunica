@@ -6,6 +6,9 @@ require_once 'conexion.php';
 
 $user = $_POST['user'];
 $pass = $_POST['pass'];
+$passhash = $_POST['passHash'];
+
+
 $IpCliente=$_POST['ip'];
 
 if ($IpCliente=='') {

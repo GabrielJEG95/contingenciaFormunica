@@ -43,6 +43,7 @@
                   <th>Otros</th>
                   <th>Tipo Cambio</th>
                   <th>Retencion</th>
+                  <th>Otros Dolar</th>
                   <th></th>
                 </tr>
                 </thead>
@@ -60,6 +61,7 @@
                   <th>Otros</th>
                   <th>Tipo Cambio</th>
                   <th>Retencion</th>
+                  <th>Otros Dolar</th>
                   <th></th>
                 </tr>
                 </tfoot>
@@ -106,6 +108,12 @@
                     </div>
                     <div class="col-lg-2">
                         <div class="form-group">
+                            <label for="" class="col-form-label">Tipo de Pago</label>
+                            <select class="form-control select2" id="cmbTipoPago" name="cmbTipoPago"> </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-2">
+                        <div class="form-group">
                             <label for="" class="col-form-label">Fecha Cierre</label>
                             <input type="date" class="form-control" id="dtpFechaCierre" name="dtpFechaCierre">
                         </div>
@@ -116,7 +124,7 @@
                             <input type="text" disabled class="form-control" id="txtNumDiario" name="txtNumDiario">
                         </div>
                     </div>
-                    <div class="col-lg-3">
+                    <div class="col-lg-2">
                         <div class="form-group">
                             <label for="" class="col-form-label">Nombre Cliente</label>
                             <input type="text" class="form-control" id="txtNombreCliente" name="txtNombreCliente">
@@ -128,15 +136,27 @@
                             <input type="text" class="form-control" id="txtMonto" name="txtMonto">
                         </div>
                     </div>
+                    <div class="col-lg-1">
+                        <div class="form-group">
+                            <label for="" class="col-form-label">Documento</label>
+                            <input type="text" class="form-control" id="txtDocumento" name="txtDocumento">
+                        </div>
+                    </div>
+                    <div class="col-lg-1">
+                        <div class="form-group">
+                            <label for="" class="col-form-label"># Deposito</label>
+                            <input type="text" class="form-control" id="txtDeposito" name="txtDeposito">
+                        </div>
+                    </div>
                     <div class="col-lg-3">
                         <label for="" class="col-form-label">Moneda</label>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="rdbEsDol" id="inlineRadio1" value="dol">
-                            <label class="form-check-label" for="inlineRadio1">Dolar</label>
+                            <input class="form-check-input" type="radio" id="rdbEsDol" name="rdbEsDol"value="dol">
+                            <label class="form-check-label" for="rdbEsDol">Dolar</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="rdbEsDol" id="inlineRadio2" value="cor">
-                            <label class="form-check-label" for="inlineRadio2">Cordoba</label>
+                            <input class="form-check-input" type="radio" id="rdbEsCor" name="rdbEsDol"  value="cor">
+                            <label class="form-check-label" for="rdbEsCor">Cordoba</label>
                         </div>
                             <button id="btnAddDetalle" class="btn btn-success">Agregar</button>
                         

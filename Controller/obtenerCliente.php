@@ -1,14 +1,24 @@
 <?php
 date_default_timezone_set('America/Managua');
+session_start();
+ob_start();
 require_once 'conexion.php';
 
-$CodSuc=$_GET['codSucursal'];
+include ('validaAutorizacion.php');
+$validate = new autorize();
 
-$sql="SELECT CODCLIENTE,NOMBRESCLIENTE,APELLIDOSCLIENTE FROM fnica.ccfClientes where CODSUCURSAL='$CodSuc'";
+if(!$validate->validate()) {
+    echo '[{error:No Autorizado,statusCode:401}]';
+} else {
+	$CodSuc=$_GET['codSucursal'];
 
-$result=sqlsrv_query($conexion,$sql);
+	$sql="SELECT CODCLIENTE,NOMBRESCLIENTE,APELLIDOSCLIENTE FROM fnica.ccfClientes where CODSUCURSAL='$CodSuc'";
 
-while ($fila = sqlsrv_fetch_array($result)) {
+	$result=sqlsrv_query($conexion,$sql);
 
-	echo '<option value="'.$fila['CODCLIENTE'].'">'.$fila['NOMBRESCLIENTE']." ".$fila['APELLIDOSCLIENTE']." ".$fila['CODCLIENTE'] .'</option>';
+	while ($fila = sqlsrv_fetch_array($result)) {
+
+		echo '<option value="'.$fila['CODCLIENTE'].'">'.$fila['NOMBRESCLIENTE']." ".$fila['APELLIDOSCLIENTE']." ".$fila['CODCLIENTE'] .'</option>';
+	}
 }
+

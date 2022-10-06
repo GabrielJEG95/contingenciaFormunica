@@ -61,6 +61,7 @@
 				    <input type="hidden" name="sistema" id="sistema">
 				    
 				    <input type="hidden" name="navegador" id="navegador">
+					<input type="hidden" name="passHash" id="passHash">
 
 				    <input type="hidden" name="ip" id="ip">
 
@@ -90,6 +91,7 @@
 <!--===============================================================================================-->
 	<script src="Views/js/main.js"></script>
 	<script src="Views/query/login.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 	<script src="Views/alertifyjs/alertify.js"></script>
 	 <script type="text/javascript">
  	window.RTCPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;   //compatibility for firefox and chrome

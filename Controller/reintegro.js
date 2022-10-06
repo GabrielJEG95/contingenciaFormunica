@@ -9,7 +9,7 @@ $('#btnNuevaSolRei').click(()=>{
     $(".modal-header").css("color", "white" );
     $('#modalCRUD2').modal('show');
 
-    $('#cmbTipoSol').load('Controller/obtenerTipoPago.php');
+    $('#cmbTipoSol').load('Controller/obtenerTipoPago.php?opcion=1');
     $('#cmbEstadoSol').load('Controller/obtenerEstadoSolicitud.php'); 
 })
 
@@ -269,6 +269,8 @@ function listarDetalleReintegro(IDSol) {
             {"data": "Concepto"},
             {"data": "FechaFactura"},
             {"data": "Monto"},
+            {"data": "Factura"},
+            {"data": "Establecimiento"},
             {"defaultContent": "<div class='text-center'><div class='btn-group'><button id='btnDelete' class='btn btn-danger btn-sm btnDelete'><i class='material-icons'>Anular</i></button></div></div>"}
        ],
         "paging": true,
