@@ -5,6 +5,7 @@ require_once 'Controller/validacion.php';
 require_once 'Controller/conexion.php';
 include('Controller/funciones.php');
 $permisos = new permisos();
+$usuario = $_SESSION['Usuario'];
 ?>
 
 <!DOCTYPE html>
