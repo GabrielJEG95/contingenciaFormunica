@@ -105,7 +105,14 @@
                     <div class="col-lg-1">
                         <div class="form-group">
                             <label for="" class="col-form-label">Monto</label>
-                            <input type="text" class="form-control" id="txtMonto" name="txtMonto">
+                            <input type="text" class="form-control" id="txtMontoTotal" name="txtMontoTotal" disabled>
+                            <input type="hidden" class="form-control" id="txtMonto" name="txtMonto" disabled>
+                        </div>
+                    </div>
+                    <div class="col-lg-1">
+                        <div class="form-group">
+                            <label for="" class="col-form-label">Porcentaje</label>
+                            <input type="text" class="form-control" id="txtPorcentaje" name="txtPorcentaje">
                         </div>
                     </div>
                 </div>
