@@ -1,4 +1,4 @@
-$(document).ready(function(){
+﻿$(document).ready(function(){
     let IDSol = ''
     $('#cargando').hide()
     listarReintegro(IDSol)
@@ -269,6 +269,8 @@ function listarDetalleReintegro(IDSol) {
             {"data": "Concepto"},
             {"data": "FechaFactura"},
             {"data": "Monto"},
+	    {"data": "Factura"},
+	    {"data": "Establecimiento"},
             {"defaultContent": "<div class='text-center'><div class='btn-group'><button id='btnDelete' class='btn btn-danger btn-sm btnDelete'><i class='material-icons'>Anular</i></button></div></div>"}
        ],
         "paging": true,

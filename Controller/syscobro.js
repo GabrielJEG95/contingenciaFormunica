@@ -28,6 +28,7 @@ $(document).on("click",".btnMostrar",function(){
     let PlazoActual = fila.find('td:eq(7)').text()
     let vencimientoActual = fila.find('td:eq(9)').text()
     let Cliente = fila.find('td:eq(2)').text()
+    $('#txtPlazoOriginal').val(PlazoActual)
 
     $('#lblPlazo').text(PlazoActual)
     $('#lblFechaVencimiento').text(vencimientoActual)

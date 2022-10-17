@@ -167,6 +167,44 @@ class factura {
         return $jsonString;
 
     }
+
+    public function buscarFacturaVendedor($factura,$codSucursal,$conexion) {
+        $sql = "SELECT * 
+        FROM fnica.fafFactura 
+        where FACTURA = $factura and CODSUCURSAL='$codSucursal'";
+
+        $result= sqlsrv_query($conexion,$sql);
+
+        $data = array();
+        while($item = sqlsrv_fetch_array($result)) {
+            $data[] = array(
+                'CODSUCURSAL' => $item['CODSUCURSAL'],
+                'FACTURA' => $item['FACTURA'],
+                'FECHAFACTURA' => $item['FECHAFACTURA']->format('Y-m-d'),
+                'CODCLIENTE' => $item['CODCLIENTE'],
+                'CLIENTE' => $item['CLIENTE'],
+                'TIPOPAGO' => $item['TIPOPAGO'],
+                'CODVENDEDOR' => $item['CODVENDEDOR'],
+                'SUBTOTAL' => $item['SUBTOTAL'],
+                'TOTALFACTURA' => $item['TOTALFACTURA']
+            );
+        } 
+
+        $jsonString = json_encode($data);
+        return $jsonString;
+    }
+
+    public function actualizarCodVendedorFact($factura,$codSucursal,$codVendedor,$conexion) {
+        $sql = "UPDATE fnica.fafFactura 
+        set CODVENDEDOR = '$codVendedor'
+        where FACTURA = $factura and CODSUCURSAL = '$codSucursal'";
+
+        if(sqlsrv_query($conexion,$sql)) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
 }
 
 class diario {
@@ -390,6 +428,7 @@ class diario {
         $sql = "DELETE FROM fnica.fafDIARIODETALLE 
         where LINEA=$linea and CODSUCURSAL = '$sucursal' and NUMEROCONSECUTIVO='$consecutivo' and NUMERODEPOSITO = $deposito";
 
+        $this->recalcularDiarioAnulado($consecutivo,$sucursal,$conexion,$linea);
         if(sqlsrv_query($conexion,$sql)) {
             return 1;
         } else {
@@ -397,10 +436,110 @@ class diario {
         }
     }
 
-    private function recalcularDiarioAnulado($consecutivo,$sucursal,$conexion) {
-        $consultaDetalle  = "SELECT LINEA,CODSUCURSAL,NUMEROCONSECUTIVO,TIPOPAGO,MONTOCORDOBA,MONTODOLAR 
-        FROM fnica.fafDIARIODETALLE where NUMEROCONSECUTIVO='$consecutivo' and CODSUCURSAL='$sucursal'";
+    private function recalcularDiarioAnulado($consecutivo,$sucursal,$conexion,$linea) {
+        $consultaDetalle  = "SELECT LINEA,CODSUCURSAL,NUMEROCONSECUTIVO,TIPOPAGO,
+        MONTOCORDOBA,MONTODOLAR 
+        FROM fnica.fafDIARIODETALLE 
+        where NUMEROCONSECUTIVO='$consecutivo' and CODSUCURSAL='$sucursal' and LINEA=$linea";
+
+        $consultaDiario = "SELECT EFECTIVOCORDOBA,EFECTIVODOLAR,CHEQUECORDOBA,CHEQUEDOLAR,
+        OTROS,OTROSDOLAR,RETENCION
+        FROM fnica.fafDIARIO where NUMEROCONSECUTIVO='$consecutivo' and CODSUCURSAL='$sucursal'";
+
+        $resultDetail = sqlsrv_query($conexion,$consultaDetalle);
+        $resultDiario = sqlsrv_query($conexion,$consultaDiario);
+
+        /* variables del diario */
+        $efectivoCordoba = 0;
+        $efectivoDolar = 0;
+        $chequeCordoba = 0;
+        $chequeDolar = 0;
+        $otros = 0;
+        $otrosDolar = 0;
+        $retencion = 0;
+
+        $montoCordoba = 0;
+        $montoDolar = 0;
+        $tipoPago = '';
+
+        while($item = sqlsrv_fetch_array($resultDetail)) {
+            $montoCordoba = $item['MONTOCORDOBA'];
+            $montoDolar = $item['MONTODOLAR'];
+            $tipoPago = $item['TIPOPAGO'];
+        }
+
+        while($item = sqlsrv_fetch_array($resultDiario)) {
+            $efectivoCordoba = $item['EFECTIVOCORDOBA'];
+            $efectivoDolar = $item['EFECTIVODOLAR'];
+            $chequeCordoba = $item['CHEQUECORDOBA'];
+            $chequeDolar = $item['CHEQUEDOLAR'];
+            $otros = $item['OTROS'];
+            $otrosDolar = $item['OTROSDOLAR'];    
+            $retencion = $item['RETENCION'];        
+        }
+
+        switch($tipoPago)
+        {
+            case 'AN':
+                break;
+            case 'CK':
+                    $chequeCordoba=$chequeCordoba-$montoCordoba;
+                    $chequeDolar=$chequeDolar-$montoDolar;
+                break;
+            case 'EF':
+                   $efectivoCordoba=$efectivoCordoba-$montoCordoba;
+                   $efectivoDolar=$efectivoDolar-$montoDolar;
+                break;
+            case 'GB':
+                break;
+            case 'NC':
+                break;
+            case 'OT':
+                   $otrosDolar=$otrosDolar-$montoDolar;
+                   $otros=$otros-$montoCordoba;
+                break;
+            case 'RT':
+                    $retencion=$retencion-$montoCordoba;
+                break;
+            case 'TB':
+                    $otrosDolar=$otrosDolar-$montoDolar;
+                    $otros=$otros-$montoCordoba;
+                break;
+            case 'TC':
+                    $otrosDolar=$otrosDolar-$montoDolar;
+                    $otros=$otros-$montoCordoba;
+                break;
+        }
+
+        $sqlUpt = "UPDATE fnica.fafDIARIO 
+        set EFECTIVOCORDOBA=$efectivoCordoba,EFECTIVODOLAR=$efectivoDolar,CHEQUECORDOBA=$chequeCordoba,
+        CHEQUEDOLAR=$chequeDolar,OTROS=$otros,RETENCION=$retencion,OTROSDOLAR=$otrosDolar
+        where NUMEROCONSECUTIVO='$consecutivo' and CODSUCURSAL='$sucursal'";
+
+       
+        if(sqlsrv_query($conexion,$sqlUpt))
+        {
+            return 1;
+        } else {
+            return 0;
+        }
 
         
+    }
+
+    public function updateMontosDiario($diario,$sucursal,$montos,$conexion) {
+        list('EF' => $EF,'EFD'=>$EFD,'CHK'=>$CHK,'CHKD'=>$CHKD,'OTRO'=>$OTRO,'OTROD'=>$OTROD,'RETENCION'=>$RETENCION) = $montos;
+
+        $sql = "UPDATE fnica.fafDiario
+        set EFECTIVOCORDOBA=$EF,EFECTIVODOLAR=$EFD,CHEQUECORDOBA=$CHK,CHEQUEDOLAR=$CHKD,OTROS=$OTRO,RETENCION=$RETENCION,OTROSDOLAR=$OTROD
+        where numeroconsecutivo=$diario and codSucursal='$sucursal'";
+
+        if(sqlsrv_query($conexion,$sql)) {
+            return 1;
+        } else {
+            return 0;
+        }
+
+
     }
 }

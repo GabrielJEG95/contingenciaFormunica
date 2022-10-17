@@ -134,6 +134,8 @@
                   <th>Concepto</th>
                   <th>Fecha Factura</th>
                   <th>Monto</th>
+		  <th>Factura</th>
+		  <th>Establecimiento</th>
                   <th></th>
                 </tr>
                 </thead>
@@ -149,6 +151,8 @@
                   <th>Concepto</th>
                   <th>Fecha Factura</th>
                   <th>Monto</th>
+		  <th>Factura</th>
+		  <th>Establecimiento</th>
                   <th></th>
                 </tr>
                 </tfoot>

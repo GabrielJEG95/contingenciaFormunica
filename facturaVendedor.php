@@ -6,7 +6,13 @@ require_once 'Controller/conexion.php';
 include('Controller/funciones.php');
 $permisos = new permisos();
 $usuario = $_SESSION['Usuario'];
+$role = '7004';
+if(!$permisos->tienePermiso($usuario,$role,$conexion)) {
+  header("Location: inicio.php");
+}
+
 ?>
+
 
 <!DOCTYPE html>
 <!--
@@ -31,13 +37,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <link rel="stylesheet" href="Views/dist/css/adminlte.min.css">
   <link rel="stylesheet" href="Views/plugins/datatables-bs4/css/dataTables.bootstrap4.css">
   <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
-  <link rel="stylesheet" type="text/css" href="Controllers/alertifyjs/css/alertify.css">
-  <link rel="stylesheet" type="text/css" href="Controllers/alertifyjs/css/themes/default.css">
+  <link rel="stylesheet" type="text/css" href="Controller/alertifyjs/css/alertify.css">
+  <link rel="stylesheet" type="text/css" href="Controller/alertifyjs/css/themes/default.css">
   <link rel="stylesheet" href="Views/plugins/select2/css/select2.min.css">
   <link rel="stylesheet" href="Views/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
   <!-- Google Font: Source Sans Pro -->
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
-  <script src="Controllers/alertifyjs/alertify.js"></script>
+  <script src="Controller/alertifyjs/alertify.js"></script>
   
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -67,25 +73,25 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">Acciones Disponibles</h1>
+            <h1 class="m-0 text-dark">Factura</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="inicio.php">Inicio</a></li>
-              <li class="breadcrumb-item active">Acciones</li>
+              <li class="breadcrumb-item active">Factura - Vendedor</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
       </div><!-- /.container-fluid -->
     </div>
     <!-- /.content-header -->
-    <form method="POST" id="frmDatos" name="frmDatos">
+    <form method="POST" id="frmFact" name="frmFact">
     <!-- Main content -->
     <div class="content">
-      <div class="container">
+      <div class="container-fluid">
         <!-- aqui va la tabla -->
       
-        <?php require_once 'Views/form/actions.php';  ?>
+        <?php require_once 'Views/form/frmFacturaVendedor.php';  ?>
       </div><!-- /.container-fluid -->
     </div>
     <!-- /.content -->
@@ -126,32 +132,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script src="Views/plugins/inputmask/jquery.inputmask.bundle.js"></script>
 <script src="Views/plugins/moment/moment.min.js"></script>
 <script src="Views/plugins/select2/js/select2.full.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="Controller/facturaVend.js"></script>
 <script>
-
-    $(document).ready(function(){
-  navigator.geolocation.getCurrentPosition(position => {
-      var lati= position.coords.latitude;
-      var long= position.coords.longitude;
-      console.log(lati);
-      console.log(long);
-      latitud = lati;
-          longitud = long;
-          $.ajax({
-            dataType: "json",
-            url: "https://nominatim.openstreetmap.org/reverse",
-            type: "get",
-            data: {format: "json", lat:latitud, lon:longitud},
-            success:function(data){
-                   ciudad = data.address.city;
-                   pais=data.address.country;
-                   estado=data.address.state;
-                   $('#lblCiudad').text(pais+", "+estado);
-                   $('#txtCiudad').val(ciudad);
-                }
-          });
-      
+  $('#btnInfo').click(function(){
+    alertify.alert("Gerencia de IT","Formunica <br>Soporte a Gerencia de IT"
+          
+        );
     });
-});
 </script>
 </body>
 </html>

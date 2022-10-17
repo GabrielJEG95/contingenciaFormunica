@@ -73,7 +73,7 @@
         </div>
 
 
-        <div class="modal fade" id="modalCRUD" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modalCRUD" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl" style="max-width: 1350px!important;" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -213,6 +213,95 @@
             <div class="modal-footer">
 
                 <button type="button" class="btn btn-success" data-dismiss="modal">Cerrar</button>
+            </div>
+
+        </div>
+    </div>
+</div> 
+
+
+
+<div class="modal fade" id="modalUpt" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" style="max-width: 1350px!important;" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                 <div class="row">
+        <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Detalle del Diario</h3>
+            
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body" style=" overflow-x: scroll; height="250px"">
+            <form id="frmDetalleRei" name="frmDetalleRei" method="post">
+                <div class="row">
+                    <div class="col-lg-2">
+                        <div class="form-group">
+                            <label for="" class="col-form-label">Efectivo Cordoba</label>
+                            <input type="text" class="form-control" id="txtEF" name="txtEF">
+                        </div>
+                    </div>
+                    <div class="col-lg-2">
+                        <div class="form-group">
+                            <label for="" class="col-form-label">Efectivo Dolar</label>
+                            <input type="text" class="form-control" id="txtEFD" name="txtEFD">
+                        </div>
+                    </div>
+                    <div class="col-lg-2">
+                        <div class="form-group">
+                            <label for="" class="col-form-label">Cheque Cordoba</label>
+                            <input type="text" class="form-control" id="txtCheq" name="txtCheq">
+                        </div>
+                    </div>
+                    <div class="col-lg-2">
+                        <div class="form-group">
+                            <label for="" class="col-form-label">Cheque Dolar</label>
+                            <input type="text" class="form-control" id="txtCheqD" name="txtCheqD">
+                        </div>
+                    </div>
+                    <div class="col-lg-2">
+                        <div class="form-group">
+                            <label for="" class="col-form-label">Otros Cordoba</label>
+                            <input type="text" class="form-control" id="OtrosC" name="OtrosC">
+                        </div>
+                    </div>
+                    <div class="col-lg-1">
+                        <div class="form-group">
+                            <label for="" class="col-form-label">Otros Dolar</label>
+                            <input type="text" class="form-control" id="txtOtrosD" name="txtOtrosD">
+                        </div>
+                    </div>
+                    <div class="col-lg-1">
+                        <div class="form-group">
+                            <label for="" class="col-form-label">Retención</label>
+                            <input type="text" class="form-control" id="txtRetencion" name="txtRetencion">
+                            <input type="hidden" class="form-control" id="txtDiario">
+                            <input type="hidden" class="form-control" id="txtSuc">
+                        </div>
+                    </div>
+                        
+                    
+                </div>
+            </form> 
+            </div>
+            <!-- /.card-body -->
+          </div>
+          </div>
+        </div>
+               
+                             
+            </div>
+            <div id="progresSave"></div>
+            <div class="modal-footer">
+            <button id="btnActualizarDiario" class="btn btn-success">Actualizar</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
             </div>
 
         </div>

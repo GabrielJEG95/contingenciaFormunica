@@ -35,7 +35,39 @@
                 <i class="right fas fa-angle-left"></i>
               </p>
             </a>
-            
+            <ul class="nav nav-treeview">
+              <?php
+                if($permisos->tienePermiso($usuario,'7001',$conexion)) {
+                  echo "<li class='nav-item'>
+                      <a href='reintegro.php' class='nav-link'>
+                        <i class='fas fa-money-check-alt'></i>
+                        <p>Reintegro</p>
+                      </a>
+                    </li>";
+                }
+
+                if($permisos->tienePermiso($usuario,'7002',$conexion)) {
+                  echo '<li class="nav-item">
+                  <a href="syscobro.php" class="nav-link">
+                    <i class="fas fa-comments-dollar"></i>
+                    <p>SysCobro</p>
+                  </a>
+                </li>';
+                }
+
+                if($permisos->tienePermiso($usuario,'7003',$conexion)) {
+                  echo '<li class="nav-item">
+                  <a href="factura.php" class="nav-link">
+                    <i class="fas fa-file-invoice"></i>
+                    <p>Factura Diario</p>
+                  </a>
+                </li>';
+                }
+              ?>
+               
+			     
+             
+            </ul>
           </li>
         </ul>
         

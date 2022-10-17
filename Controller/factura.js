@@ -75,8 +75,6 @@ function buscarFactura(opcion,documento,codSucursal,CodCliente) {
     });
 }
 
-
-
 function buscarDetalleFactura(opcion,documento,codSucursal,CodCliente) {
     $('#tblDetalleFactura').DataTable({
         "bDeferRender":true,

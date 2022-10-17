@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 ini_set('display_error','On');
 error_reporting(E_ALL);
 
