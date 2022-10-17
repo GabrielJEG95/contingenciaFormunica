@@ -9,7 +9,7 @@ $('#btnNuevaSolRei').click(()=>{
     $(".modal-header").css("color", "white" );
     $('#modalCRUD2').modal('show');
 
-    $('#cmbTipoSol').load('Controller/obtenerTipoPago.php');
+    $('#cmbTipoSol').load('Controller/obtenerTipoPago.php?opcion=1');
     $('#cmbEstadoSol').load('Controller/obtenerEstadoSolicitud.php'); 
 })
 

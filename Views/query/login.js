@@ -11,10 +11,13 @@ $(document).ready(function(){
 });
 
 $('#btnLogin').click(()=>{
-    var user = $('#user').val()
-    var pass = $('#pass').val()
+    let user = $('#user').val()
+    let pass = $('#pass').val()
+    const passHash = CryptoJS.SHA256(pass)
+    console.log(passHash)
+    $('#passHash').val(passHash)
 
-    var datos=$('#frmDatos').serialize();
+    let datos=$('#frmDatos').serialize();
 
     if(user === "") {
         alertify.error("Ingrese su usuario")
@@ -25,6 +28,7 @@ $('#btnLogin').click(()=>{
         return false
     }
     else {
+        
         $.ajax({
             url:"Controller/login.php",
 			method:"POST",

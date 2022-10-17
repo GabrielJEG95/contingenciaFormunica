@@ -11,6 +11,8 @@ $consecutivo=$_GET['diario'];
 $sucursal=$_GET['codSucursal'];
 $opcion=$_GET['opcion'];
 
+
+
 $usuario = $_SESSION['Usuario'];
 $table = 'fafDIARIO';
 $action = '';
@@ -37,8 +39,29 @@ switch($opcion)
             $contingencia->logContig($table,$usuario,$action,$initialVal,$finalVal,$ip,$conexion);
         break;
     case 'post':
+
+            $monto=$_POST['monto'];
+            $moneda=$_POST['moneda'];
+            $cliente=$_POST['cliente'];
+            $bancoEmisor=$_POST['bancoEmisor'];
+            $bancoReceptor=$_POST['bancoReceptor'];
+            $fechaCierre=$_POST['fechaCierre'];
+            $diarioPost=$_POST['diario'];
+            $tipoPago=$_POST['tipoPago'];
+            $documento=$_POST['documento'];
+            $deposito=$_POST['deposito'];
+
+            echo $diario->registrarDiarioDetalle($consecutivo,$sucursal,$monto,$moneda,$cliente,$bancoEmisor,$bancoReceptor,$fechaCierre,$diarioPost,$conexion,$tipoPago,$documento,$deposito);
+                
+            
         break;
     case 'put':
+        break;
+    case 'delete':
+            $linea = $_GET['linea'];
+            $deposito = $_GET['deposito'];
+            
+            echo $diario->eliminarLineaDiario($linea,$sucursal,$consecutivo,$deposito,$conexion);
         break;
 }
 
