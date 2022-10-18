@@ -61,6 +61,7 @@ if(!$validate->validate()) {
                 
             break;
         case 'put':
+<<<<<<< HEAD
 
                 $montosOriginales = $diario->buscarDiario($consecutivo,$sucursal,$conexion);
                 $array=json_decode($montosOriginales,true);
@@ -72,6 +73,8 @@ if(!$validate->validate()) {
                 $finalVal = "Efectivo C$: ".$montos['EF']." Efectivo $: ".$montos['EFD']." Cheque C$: ".$montos['CHK']." Cheque $: ".$montos['CHKD']." Otros C$: ".$montos['OTRO']." Otros $: ".$montos['OTROD']." Retencion: ".$montos['RETENCION'];
                 $initialVal = "Efectivo C$: ".$array[0]['EFECTIVOCORDOBA']." Efectivo $: ".$array[0]['EFECTIVODOLAR']." Cheque C$: ".$array[0]['CHEQUECORDOBA']." Cheque $: ".$array[0]['CHEQUEDOLAR']." Otros C$: ".$array[0]['OTROS']." Otros $: ".$array[0]['OTROSDOLAR']." Retencion: ".$array[0]['RETENCION'];
                 $contingencia->logContig($table,$usuario,$action,$initialVal,$finalVal,$ip,$conexion);
+=======
+>>>>>>> 5faed471b40383b1c11d613d10c585c687024c2f
             break;
         case 'delete':
                 $linea = $_GET['linea'];

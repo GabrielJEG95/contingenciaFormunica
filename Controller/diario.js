@@ -34,6 +34,7 @@ $(document).on("click",".btnMostrar",function(){
 
 })
 
+<<<<<<< HEAD
 $(document).on("click",".btnUpt",function(){
     
     $(".modal-header").css("background-color", "#4c8c4a");
@@ -115,6 +116,8 @@ $('#btnActualizarDiario').click(()=>{
     });
 })
 
+=======
+>>>>>>> 5faed471b40383b1c11d613d10c585c687024c2f
 $(document).on("click",".btnAnular",function(){
     fila=$(this).closest("tr");
     let Linea = fila.find('td:eq(0)').text();
@@ -150,12 +153,15 @@ $(document).on("click",".btnAnular",function(){
     
 })
 
+<<<<<<< HEAD
 $(document).on("click",".btnUpt",function(){
     fila=$(this).closest("tr");
     let Linea = fila.find('td:eq(0)').text();
 
 })
 
+=======
+>>>>>>> 5faed471b40383b1c11d613d10c585c687024c2f
 $('#btnAddDetalle').click(()=>{
     let monto=$('#txtMonto').val()
     let moneda=$("input[type=radio][name=rdbEsDol]").filter(":checked").val()
@@ -226,7 +232,11 @@ function buscarDiario(opcion,diario,codSucursal) {
             {"data": "TIPOCAMBIO"},
             {"data": "RETENCION"},
             {"data": "OTROSDOLAR"},
+<<<<<<< HEAD
             {"defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-success btn-sm btnUpt'><i class='material-icons'>Editar</i></button><button class='btn btn-success btn-sm btnMostrar'><i class='material-icons'>Detalles</i></button> </div></div>"}
+=======
+            {"defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-success btn-sm btnMostrar'><i class='material-icons'>Detalles</i></button> </div></div>"}
+>>>>>>> 5faed471b40383b1c11d613d10c585c687024c2f
        ],
         "paging": true,
         "lengthChange": true,

@@ -29,14 +29,23 @@ $(document).on("click",".btnMostrar",function(){
     
     fila=$(this).closest("tr");
     IDSol= parseInt(fila.find('td:eq(0)').text());
+    let monto = fila.find('td:eq(4)').text()
+    
     $('#exampleModalLabel').text('Solicitud # '+IDSol)
     $('#txtIdSolic').val(IDSol)
     limpiarCampos()
     listarDetalleReintegro(IDSol)
-   
+    $('#txtMontoTotal').val(monto)
 });
 
 $('#btnGuardarRei').click(()=>{
+    let montoTotal = $('#txtMontoTotal').val()
+    let porcentaje = $('#txtPorcentaje').val() 
+    let monto = 0
+
+    monto = (montoTotal*porcentaje)/100
+    $('#txtMonto').val(monto)
+
     var data = new FormData($('#frmReintegro')[0]);
     console.log(data)
     $.ajax({
